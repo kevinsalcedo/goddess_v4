@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const useResources = resource => {
+const useResourcesReturnList = resource => {
   const [resources, setResources] = useState([]);
 
   useEffect(() => {
@@ -16,4 +16,4 @@ const useResources = resource => {
 
   return resources;
 };
-export default useResources;
+export default useResourcesReturnList;

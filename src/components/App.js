@@ -1,5 +1,5 @@
 import React from "react";
-import { Container } from "semantic-ui-react";
+import { Container, Divider } from "semantic-ui-react";
 import { Router, Route, Switch } from "react-router-dom";
 import history from "../history";
 import Navbar from "./Navbar";
@@ -15,6 +15,7 @@ class App extends React.Component {
       <Container>
         <Router history={history}>
           <Navbar />
+          <Divider horizontal hidden />
           <Container>
             <Switch>
               <Route path='/' exact component={Home} />
