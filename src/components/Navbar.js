@@ -11,7 +11,7 @@ class Navbar extends React.Component {
     const { activeItem } = this.state;
 
     return (
-      <Menu pointing>
+      <Menu className='top fixed' pointing stackable>
         <Menu.Item as={Link} to='/' name='logo' />
         <Menu.Menu position='right'>
           <Menu.Item

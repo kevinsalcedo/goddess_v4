@@ -15,7 +15,7 @@ class App extends React.Component {
       <Container>
         <Router history={history}>
           <Navbar />
-          <Divider horizontal hidden />
+          <Divider horizontal hidden section />
           <Container>
             <Switch>
               <Route path='/' exact component={Home} />
