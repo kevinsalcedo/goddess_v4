@@ -3,7 +3,7 @@ import { Menu, Image, Icon, Container } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 
 import logo from "../assets/logo-white.png";
-import headerImg from "../assets/header.jpg";
+import GoogleAuth from "./GoogleAuth";
 
 class Navbar extends React.Component {
   state = { activeItem: "blog" };
@@ -43,6 +43,9 @@ class Navbar extends React.Component {
               active={activeItem === "about"}
               onClick={this.handleItemClick}
             />
+            <Menu.Item>
+              <GoogleAuth />
+            </Menu.Item>
           </Menu.Menu>
         </Menu>
       </Container>

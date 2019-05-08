@@ -8,15 +8,15 @@ import PostList from "./posts/PostList";
 import PostCreate from "./posts/PostCreate";
 import PostDetail from "./posts/PostDetail";
 import PostEdit from "./posts/PostEdit";
+import headerImg from "../assets/header.jpg";
 
 class App extends React.Component {
   render() {
     return (
-      <Container>
+      <Container fluid>
         <Router history={history}>
           <Navbar />
-          <Divider section hidden />
-          <Divider section hidden />
+          <Image src={headerImg} fluid />
           <Divider section hidden />
           <Container>
             <Switch>
