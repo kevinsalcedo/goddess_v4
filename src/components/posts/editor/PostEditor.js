@@ -4,26 +4,29 @@ import { Value } from "slate";
 import MarkHotKey from "./MarkHotKey";
 
 // Initial content
-const initialValue = Value.fromJSON({
-  document: {
-    nodes: [
-      {
-        object: "block",
-        type: "paragraph",
-        nodes: [
-          {
-            object: "text",
-            leaves: [
-              {
-                text: "A line of text in a paragraph."
-              }
-            ]
-          }
-        ]
-      }
-    ]
+const existingValue = JSON.parse(localStorage.getItem("content"));
+const initialValue = Value.fromJSON(
+  existingValue || {
+    document: {
+      nodes: [
+        {
+          object: "block",
+          type: "paragraph",
+          nodes: [
+            {
+              object: "text",
+              leaves: [
+                {
+                  text: "A line of text in a paragraph."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
   }
-});
+);
 
 const plugins = [
   MarkHotKey({ key: "b", type: "bold" }),
@@ -40,9 +43,16 @@ class PostEditor extends React.Component {
 
   // Update the value of the editor's content
   onChange = ({ value }) => {
+    // Save value to local storage
+    // TODO: save the value to a db?
+    if (value.document !== this.state.value.document) {
+      const content = JSON.stringify(value.toJSON());
+      localStorage.setItem("content", content);
+    }
     this.setState({ value });
   };
 
+  // All ctrl-[key] functions
   renderMark = (props, editor, next) => {
     switch (props.mark.type) {
       case "bold":
