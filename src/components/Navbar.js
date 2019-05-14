@@ -6,7 +6,7 @@ import logo from "../assets/logo-white.png";
 import GoogleAuth from "./GoogleAuth";
 
 class Navbar extends React.Component {
-  state = { activeItem: "blog" };
+  state = { activeItem: null };
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
