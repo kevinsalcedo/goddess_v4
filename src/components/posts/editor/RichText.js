@@ -72,7 +72,6 @@ class RichText extends React.Component {
           {this.renderMarkButton("italic", "italic")}
           {this.renderMarkButton("underlined", "underline")}
           {this.renderMarkButton("code", "code")}
-          {this.renderBlockButton("heading-one", "header")}
           {this.renderBlockButton("block-quote", "quote right")}
           {this.renderBlockButton("numbered-list", "list ol")}
           {this.renderBlockButton("bulleted-list", "list")}
@@ -100,11 +99,13 @@ class RichText extends React.Component {
     );
   }
 
+  // Show in/active mark buttons on toolbar
   renderMarkButton = (type, icon) => {
     const isActive = this.hasMark(type);
 
     return (
       <Menu.Item
+        as='a'
         active={isActive}
         onMouseDown={event => this.onClickMark(event, type)}
         icon={icon}
@@ -112,6 +113,7 @@ class RichText extends React.Component {
     );
   };
 
+  // Show in/active block buttons on toolbar
   renderBlockButton = (type, icon) => {
     let isActive = this.hasBlock(type);
 
@@ -128,6 +130,7 @@ class RichText extends React.Component {
 
     return (
       <Menu.Item
+        as='a'
         active={isActive}
         onMouseDown={event => this.onClickBlock(event, type)}
         icon={icon}
@@ -135,6 +138,7 @@ class RichText extends React.Component {
     );
   };
 
+  // Render a block of text with attributes
   renderBlock = (props, editor, next) => {
     const { attributes, children, node } = props;
 
@@ -143,8 +147,6 @@ class RichText extends React.Component {
         return <blockquote {...attributes}>{children}</blockquote>;
       case "bulleted-list":
         return <ul {...attributes}>{children}</ul>;
-      case "heading-one":
-        return <h1 {...attributes}>{children}</h1>;
       case "list-item":
         return <li {...attributes}>{children}</li>;
       case "numbered-list":
@@ -154,6 +156,7 @@ class RichText extends React.Component {
     }
   };
 
+  // Render text with markup attributes
   renderMark = (props, editor, next) => {
     const { children, mark, attributes } = props;
 
@@ -171,7 +174,9 @@ class RichText extends React.Component {
     }
   };
 
+  // Editor behavior when user enters/deletes text
   onChange = ({ value }) => {
+    // If document changes, then set a copy in local storage
     if (value.document !== this.state.value.document) {
       const content = JSON.stringify(value.toJSON());
       localStorage.setItem("content", content);
@@ -179,6 +184,7 @@ class RichText extends React.Component {
     this.setState({ value });
   };
 
+  // Check for CTRL/CMD+modifier combinations
   onKeyDown = (event, editor, next) => {
     let mark;
 
@@ -198,11 +204,13 @@ class RichText extends React.Component {
     editor.toggleMark(mark);
   };
 
+  // Toggle toolbar mark
   onClickMark = (event, type) => {
     event.preventDefault();
     this.editor.toggleMark(type);
   };
 
+  // Toggle toolbar block
   onClickBlock = (event, type) => {
     event.preventDefault();
 
