@@ -180,7 +180,9 @@ class RichText extends React.Component {
     if (value.document !== this.state.value.document) {
       const content = JSON.stringify(value.toJSON());
       localStorage.setItem("content", content);
+      console.log(content);
     }
+
     this.setState({ value });
   };
 
