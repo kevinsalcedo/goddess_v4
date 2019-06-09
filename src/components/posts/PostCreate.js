@@ -58,7 +58,7 @@ class PostCreate extends React.Component {
 
     const serializedContent = Serializer.serialize(this.state.value);
 
-    const postRef = db.collection("posts").add({
+    db.collection("posts").add({
       title: this.state.title,
       content: serializedContent
     });

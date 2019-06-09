@@ -8,6 +8,8 @@ import {
   Card,
   Button
 } from "semantic-ui-react";
+import Serializer from "slate-base64-serializer";
+import PlainSerializer from "slate-plain-serializer";
 import firebase from "../../firestore";
 import { connect } from "react-redux";
 import { fetchPosts } from "../../actions";
@@ -30,10 +32,17 @@ class PostList extends React.Component {
 
     await collection.get().then(snapshot => {
       snapshot.forEach(doc => {
+        // Deserialize base64 encoding of body
+        const content = Serializer.deserialize(doc.data().content);
+        // Convert body to plain text
+        const plainText = PlainSerializer.serialize(content);
+
+        // Create post to append to list
         const post = {
           id: Math.floor(Math.random() * 10),
           title: doc.data().title,
-          body: doc.data().content
+          body: doc.data().content,
+          snippet: plainText
         };
         posts = [...posts, post];
       });
@@ -47,7 +56,7 @@ class PostList extends React.Component {
       return this.state.posts.map(post => (
         <Card as={Link} to={`/posts/${post.id}`} fluid key={post.id}>
           <Card.Content header={post.title} />
-          <Card.Content description={post.body} />
+          <Card.Content description={post.snippet} />
           <Card.Content extra>{post.id}</Card.Content>
         </Card>
       ));
