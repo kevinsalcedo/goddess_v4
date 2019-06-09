@@ -7,33 +7,8 @@ https://github.com/ianstormtaylor/slate/blob/master/examples/rich-text/index.js
 
 import React from "react";
 import { Editor } from "slate-react";
-import { Value } from "slate";
 import { Container, Menu } from "semantic-ui-react";
 import { isKeyHotkey } from "is-hotkey";
-
-const existingValue = JSON.parse(localStorage.getItem("content"));
-const initialValue = Value.fromJSON(
-  existingValue || {
-    document: {
-      nodes: [
-        {
-          object: "block",
-          type: "paragraph",
-          nodes: [
-            {
-              object: "text",
-              leaves: [
-                {
-                  text: "A line of text in a paragraph."
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  }
-);
 
 const DEFAULT_NODE = "paragraph";
 
@@ -43,19 +18,15 @@ const isUnderlinedHotkey = isKeyHotkey("mod+u");
 const isCodeHotkey = isKeyHotkey("mod+`");
 
 class RichText extends React.Component {
-  state = {
-    value: initialValue
-  };
-
   // Check to see if mark 'type' exists in selection
   hasMark = type => {
-    const { value } = this.state;
+    const { value } = this.props;
     return value.activeMarks.some(mark => mark.type === type);
   };
 
   // Check to see if block 'type' exists
   hasBlock = type => {
-    const { value } = this.state;
+    const { value } = this.props;
     return value.blocks.some(node => node.type === type);
   };
 
@@ -88,7 +59,7 @@ class RichText extends React.Component {
             spellCheck
             autoFocusplaceholder='Enter text here...'
             ref={this.ref}
-            value={this.state.value}
+            value={this.props.value}
             onChange={this.onChange}
             onKeyDown={this.onKeyDown}
             renderBlock={this.renderBlock}
@@ -120,7 +91,7 @@ class RichText extends React.Component {
     if (["numbered-list", "bulleted-list"].includes(type)) {
       const {
         value: { document, blocks }
-      } = this.state;
+      } = this.props;
 
       if (blocks.size > 0) {
         const parent = document.getParent(blocks.first().key);
@@ -176,14 +147,7 @@ class RichText extends React.Component {
 
   // Editor behavior when user enters/deletes text
   onChange = ({ value }) => {
-    // If document changes, then set a copy in local storage
-    if (value.document !== this.state.value.document) {
-      const content = JSON.stringify(value.toJSON());
-      localStorage.setItem("content", content);
-      console.log(content);
-    }
-
-    this.setState({ value });
+    this.props.handleContentChange(value);
   };
 
   // Check for CTRL/CMD+modifier combinations

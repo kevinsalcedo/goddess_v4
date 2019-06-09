@@ -16,6 +16,7 @@
     "redux-thunk": "^2.3.0",
     "semantic-ui-react": "^0.86.0",
     "slate": "^0.46.1",
+    "slate-base64-serializer": "^0.2.105",
     "slate-mark-hotkeys": "^0.2.0",
     "slate-react": "^0.21.24"
   },

@@ -8,19 +8,43 @@ import {
   Card,
   Button
 } from "semantic-ui-react";
+import firebase from "../../firestore";
 import { connect } from "react-redux";
 import { fetchPosts } from "../../actions";
 
 class PostList extends React.Component {
+  state = {
+    posts: []
+  };
   // Fetch all created posts
-  componentDidMount() {
-    this.props.fetchPosts();
+  async componentDidMount() {
+    const items = await this.getContent();
+    this.setState({ posts: items });
+  }
+
+  // Hit Firestore db to get posts
+  async getContent() {
+    const db = firebase.firestore();
+    const collection = db.collection("posts");
+    let posts = [];
+
+    await collection.get().then(snapshot => {
+      snapshot.forEach(doc => {
+        const post = {
+          id: Math.floor(Math.random() * 10),
+          title: doc.data().title,
+          body: doc.data().content
+        };
+        posts = [...posts, post];
+      });
+    });
+    return posts;
   }
 
   // Render the list of posts
   renderList() {
-    if (this.props.posts) {
-      return this.props.posts.map(post => (
+    if (this.state.posts) {
+      return this.state.posts.map(post => (
         <Card as={Link} to={`/posts/${post.id}`} fluid key={post.id}>
           <Card.Content header={post.title} />
           <Card.Content description={post.body} />
