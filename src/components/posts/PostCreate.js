@@ -49,6 +49,13 @@ class PostCreate extends React.Component {
     this.setState({ value });
   };
 
+  parseTitle = title => {
+    return title.replace(
+      /(\s|~|`|!|@|#|$|%|^|&|\*|\(|\)|{|}|\[|\]|;|:|\"|'|<|,|\.|>|\?|\/|\\|\||-|_|\+|=)/g,
+      ""
+    );
+  };
+
   addPost = e => {
     e.preventDefault();
     const db = firebase.firestore();
@@ -58,15 +65,18 @@ class PostCreate extends React.Component {
 
     const serializedContent = Serializer.serialize(this.state.value);
 
-    db.collection("posts").add({
-      title: this.state.title,
-      content: serializedContent
-    });
+    db.collection("posts")
+      .doc(this.parseTitle(this.state.title))
+      .set({
+        title: this.state.title,
+        content: serializedContent
+      });
 
     this.setState({
       title: "",
       value: initialValue
     });
+    localStorage.clear();
   };
   render() {
     return (
@@ -84,6 +94,7 @@ class PostCreate extends React.Component {
         <RichText
           value={this.state.value}
           handleContentChange={this.handleContentChange}
+          readOnly={false}
         />
       </Container>
     );

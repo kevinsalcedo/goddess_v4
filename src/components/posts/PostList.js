@@ -35,11 +35,10 @@ class PostList extends React.Component {
         // Deserialize base64 encoding of body
         const content = Serializer.deserialize(doc.data().content);
         // Convert body to plain text
-        const plainText = PlainSerializer.serialize(content);
-
+        const plainText = PlainSerializer.serialize(content).split("\n")[0];
         // Create post to append to list
         const post = {
-          id: Math.floor(Math.random() * 10),
+          id: doc.id,
           title: doc.data().title,
           body: doc.data().content,
           snippet: plainText
@@ -53,6 +52,7 @@ class PostList extends React.Component {
   // Render the list of posts
   renderList() {
     if (this.state.posts) {
+      console.log(this.state.posts);
       return this.state.posts.map(post => (
         <Card as={Link} to={`/posts/${post.id}`} fluid key={post.id}>
           <Card.Content header={post.title} />

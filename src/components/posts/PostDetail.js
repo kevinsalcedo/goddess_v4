@@ -1,40 +1,68 @@
 import React from "react";
 import { Container, Card, Comment, Segment, Loader } from "semantic-ui-react";
-import useResourcesReturnObject from "../../useResourceReturnObject";
-import useResourcesReturnList from "../../useResourceReturnList";
+import firebase from "../../firestore";
+import Serializer from "slate-base64-serializer";
+import RichText from "./editor/RichText";
 
-const PostDetail = props => {
-  const { id } = props.match.params;
-  const post = useResourcesReturnObject(id);
-  const comments = useResourcesReturnList(`posts/${id}/comments`).slice(0, 5);
-
-  const renderComments = () => {
-    return comments.map(comment => (
-      <Comment key={comment.id}>
-        <Comment.Author>{comment.name}</Comment.Author>
-        <Comment.Text>{comment.body}</Comment.Text>
-      </Comment>
-    ));
+class PostDetail extends React.Component {
+  state = {
+    post: null
   };
-  return (
-    <Container>
-      {post ? (
-        <Card fluid>
-          <Card.Content header={post.title} />
-          <Card.Content description={post.body} />
-        </Card>
-      ) : (
-        <Loader />
-      )}
-      <Segment>
+
+  componentDidMount() {
+    console.log(this.props);
+    const { id } = this.props.match.params;
+
+    // Get the database
+    const db = firebase.firestore();
+    const postsRef = db.collection("posts");
+    const docRef = postsRef.doc(id);
+
+    // Grab the appropriate document
+    docRef.get().then(doc => {
+      const content = Serializer.deserialize(doc.data().content);
+
+      this.setState({
+        post: {
+          title: doc.data().title,
+          content: content
+        }
+      });
+    });
+  }
+
+  // const renderComments = () => {
+  //   return comments.map(comment => (
+  //     <Comment key={comment.id}>
+  //       <Comment.Author>{comment.name}</Comment.Author>
+  //       <Comment.Text>{comment.body}</Comment.Text>
+  //     </Comment>
+  //   ));
+  // };
+  render() {
+    return (
+      <Container>
+        {this.state.post ? (
+          <Card fluid>
+            <Card.Content header={this.state.post.title} />
+            {/* <Card.Content description={this.state.post.content} /> */}
+            <Card.Content>
+              <RichText value={this.state.post.content} readOnly={true} />
+            </Card.Content>
+          </Card>
+        ) : (
+          <Loader />
+        )}
+        {/* <Segment>
         {comments ? (
           <Comment.Group>{renderComments()}</Comment.Group>
         ) : (
           <Loader />
         )}
-      </Segment>
-    </Container>
-  );
-};
+      </Segment> */}
+      </Container>
+    );
+  }
+}
 
 export default PostDetail;

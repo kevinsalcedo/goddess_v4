@@ -38,15 +38,7 @@ class RichText extends React.Component {
   render() {
     return (
       <Container>
-        <Menu secondary pointing>
-          {this.renderMarkButton("bold", "bold")}
-          {this.renderMarkButton("italic", "italic")}
-          {this.renderMarkButton("underlined", "underline")}
-          {this.renderMarkButton("code", "code")}
-          {this.renderBlockButton("block-quote", "quote right")}
-          {this.renderBlockButton("numbered-list", "list ol")}
-          {this.renderBlockButton("bulleted-list", "list")}
-        </Menu>
+        {this.renderMenu()}
         <Container
           style={{
             backgroundColor: "#eee",
@@ -64,6 +56,7 @@ class RichText extends React.Component {
             onKeyDown={this.onKeyDown}
             renderBlock={this.renderBlock}
             renderMark={this.renderMark}
+            readOnly={this.props.readOnly}
           />
         </Container>
       </Container>
@@ -84,6 +77,19 @@ class RichText extends React.Component {
     );
   };
 
+  renderMenu = () => {
+    return !this.props.readOnly ? (
+      <Menu secondary pointing>
+        {this.renderMarkButton("bold", "bold")}
+        {this.renderMarkButton("italic", "italic")}
+        {this.renderMarkButton("underlined", "underline")}
+        {this.renderMarkButton("code", "code")}
+        {this.renderBlockButton("block-quote", "quote right")}
+        {this.renderBlockButton("numbered-list", "list ol")}
+        {this.renderBlockButton("bulleted-list", "list")}
+      </Menu>
+    ) : null;
+  };
   // Show in/active block buttons on toolbar
   renderBlockButton = (type, icon) => {
     let isActive = this.hasBlock(type);
