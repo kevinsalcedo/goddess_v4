@@ -1,5 +1,13 @@
 import React from "react";
-import { Container, Header, Button, Input, Form } from "semantic-ui-react";
+import {
+  Container,
+  Header,
+  Button,
+  Input,
+  Form,
+  Label,
+  Segment
+} from "semantic-ui-react";
 import Serializer from "slate-base64-serializer";
 import { Value } from "slate";
 import RichText from "./editor/RichText";
@@ -87,15 +95,21 @@ class PostCreate extends React.Component {
             name='title'
             value={this.state.title}
             onChange={this.handleTitleChange}
+            placeholder='Enter a sick post title'
+            fluid
+            size='large'
           />
-
-          <Button type='submit'>Submit</Button>
         </Form>
-        <RichText
-          value={this.state.value}
-          handleContentChange={this.handleContentChange}
-          readOnly={false}
-        />
+        <Segment>
+          <Label attached='top left'>Post Body</Label>
+          <RichText
+            value={this.state.value}
+            handleContentChange={this.handleContentChange}
+            readOnly={false}
+          />
+        </Segment>
+        <br />
+        <Button type='submit'>Submit</Button>
       </Container>
     );
   }
