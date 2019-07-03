@@ -52,10 +52,14 @@ class PostList extends React.Component {
   // Render the list of posts
   renderList() {
     if (this.state.posts) {
-      console.log(this.state.posts);
       return this.state.posts.map(post => (
         <Card as={Link} to={`/posts/${post.id}`} fluid key={post.id}>
-          <Card.Content header={post.title} />
+          <Card.Content>
+            <Card.Header>
+              {post.title}
+              {this.renderEditButton(post.id)}
+            </Card.Header>
+          </Card.Content>
           <Card.Content description={post.snippet} />
           <Card.Content extra>{post.id}</Card.Content>
         </Card>
@@ -71,6 +75,16 @@ class PostList extends React.Component {
       return (
         <Button as={Link} to='/posts/new'>
           Create a Post
+        </Button>
+      );
+    }
+  }
+
+  renderEditButton(id) {
+    if (this.props.auth.isSignedIn) {
+      return (
+        <Button size='small' floated='right' as={Link} to={`/posts/edit/${id}`}>
+          Edit
         </Button>
       );
     }
