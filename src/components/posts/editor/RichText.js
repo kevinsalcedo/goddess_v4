@@ -8,14 +8,14 @@ https://github.com/ianstormtaylor/slate/blob/master/examples/rich-text/index.js
 import React from "react";
 import { Editor } from "slate-react";
 import { Container, Menu } from "semantic-ui-react";
-import { isKeyHotkey } from "is-hotkey";
+import isHotkey from "is-hotkey";
 
 const DEFAULT_NODE = "paragraph";
 
-const isBoldHotkey = isKeyHotkey("mod+b");
-const isItalicHotkey = isKeyHotkey("mod+i");
-const isUnderlinedHotkey = isKeyHotkey("mod+u");
-const isCodeHotkey = isKeyHotkey("mod+`");
+const isBoldHotkey = isHotkey("mod+b");
+const isItalicHotkey = isHotkey("mod+i");
+const isUnderlinedHotkey = isHotkey("mod+u");
+const isCodeHotkey = isHotkey("mod+`");
 
 class RichText extends React.Component {
   // Check to see if mark 'type' exists in selection
@@ -49,7 +49,7 @@ class RichText extends React.Component {
         >
           <Editor
             spellCheck
-            autoFocusplaceholder='Enter text here...'
+            autoFocusplaceholder="Enter text here..."
             ref={this.ref}
             value={this.props.value}
             onChange={this.onChange}
@@ -69,7 +69,7 @@ class RichText extends React.Component {
 
     return (
       <Menu.Item
-        as='a'
+        as="a"
         active={isActive}
         onMouseDown={event => this.onClickMark(event, type)}
         icon={icon}
@@ -107,7 +107,7 @@ class RichText extends React.Component {
 
     return (
       <Menu.Item
-        as='a'
+        as="a"
         active={isActive}
         onMouseDown={event => this.onClickBlock(event, type)}
         icon={icon}
