@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, Button } from "semantic-ui-react";
+import GoogleAuth from "./GoogleAuth";
 
 const Footer = () => {
   return (
@@ -9,8 +10,9 @@ const Footer = () => {
         rel="noopener noreferrer"
         target="_blank"
       >
-        <Button circular color="instagram" icon="instagram" />
+        <Button color="instagram" icon="instagram" />
       </a>
+      {/* <GoogleAuth /> */}
     </Container>
   );
 };

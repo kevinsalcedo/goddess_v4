@@ -3,7 +3,6 @@ import { Menu, Image, Icon, Container } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 
 import logo from "../assets/logo-white.png";
-import GoogleAuth from "./GoogleAuth";
 
 class Navbar extends React.Component {
   state = { activeItem: null };
@@ -15,37 +14,34 @@ class Navbar extends React.Component {
 
     return (
       <Container fluid>
-        <Menu className='top fixed' color='violet' inverted stackable>
-          <Menu.Item as={Link} to='/'>
-            <Icon size='huge'>
+        <Menu className="top fixed" color="violet" inverted stackable>
+          <Menu.Item as={Link} to="/">
+            <Icon size="huge">
               <Image src={logo} />
             </Icon>
           </Menu.Item>
-          <Menu.Menu position='right'>
+          <Menu.Menu position="right">
             <Menu.Item
               as={Link}
-              to='/posts'
-              name='blog'
+              to="/posts"
+              name="blog"
               active={activeItem === "blog"}
               onClick={this.handleItemClick}
             />
             <Menu.Item
               as={Link}
-              to='#'
-              name='photos'
+              to="#"
+              name="photos"
               active={activeItem === "photos"}
               onClick={this.handleItemClick}
             />
             <Menu.Item
               as={Link}
-              to='#'
-              name='about'
+              to="#"
+              name="about"
               active={activeItem === "about"}
               onClick={this.handleItemClick}
             />
-            <Menu.Item>
-              <GoogleAuth />
-            </Menu.Item>
           </Menu.Menu>
         </Menu>
       </Container>
