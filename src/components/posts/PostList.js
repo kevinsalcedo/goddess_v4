@@ -16,7 +16,8 @@ import { fetchPosts } from "../../actions";
 
 class PostList extends React.Component {
   state = {
-    posts: []
+    posts: [],
+    isEditMode: false
   };
   // Fetch all created posts
   async componentDidMount() {
@@ -52,16 +53,20 @@ class PostList extends React.Component {
   // Render the list of posts
   renderList() {
     if (this.state.posts) {
+      const { isEditMode } = this.state;
       return this.state.posts.map(post => (
-        <Card as={Link} to={`/posts/${post.id}`} fluid key={post.id}>
+        <Card
+          fluid
+          key={post.title}
+          as={Link}
+          color={isEditMode ? "yellow" : "violet"}
+          to={`posts/${isEditMode ? "edit/" : ""}${post.title}`}
+        >
           <Card.Content>
-            <Card.Header>
-              {post.title}
-              {this.renderEditButton(post.id)}
-            </Card.Header>
+            <Card.Header>{post.title}</Card.Header>
           </Card.Content>
           <Card.Content description={post.snippet} />
-          <Card.Content extra>{post.id}</Card.Content>
+          {/* <Card.Content extra>{this.renderEditButton(post.title)}</Card.Content> */}
         </Card>
       ));
     }
@@ -73,22 +78,43 @@ class PostList extends React.Component {
     // TODO: check for authenticated token for Grace's login
     if (this.props.auth.isSignedIn) {
       return (
-        <Button as={Link} to='/posts/new'>
+        // <Button as={Link} to="/posts/edit/new">
+        <Button onClick={() => this.props.history.push("/posts/edit/new")}>
           Create a Post
         </Button>
       );
     }
   }
 
-  renderEditButton(id) {
+  renderEditButton = () => {
     if (this.props.auth.isSignedIn) {
+      const { isEditMode } = this.state;
       return (
-        <Button size='small' floated='right' as={Link} to={`/posts/edit/${id}`}>
-          Edit
+        <Button
+          toggle
+          active={isEditMode}
+          onClick={() => this.setState({ isEditMode: !isEditMode })}
+        >
+          {isEditMode ? "Stop Editing" : "Edit"}
         </Button>
       );
     }
-  }
+  };
+
+  // renderEditButton(title) {
+  //   if (this.props.auth.isSignedIn) {
+  //     return (
+  //       <Button
+  //         size="small"
+  //         floated="right"
+  //         as={Link}
+  //         to={`/posts/edit/${title}`}
+  //       >
+  //         Edit
+  //       </Button>
+  //     );
+  //   }
+  // }
 
   render() {
     return (
@@ -100,8 +126,11 @@ class PostList extends React.Component {
             justifyContent: "space-between"
           }}
         >
-          <Header size='large'>Grace's Posts</Header>
-          {this.renderCreateButton()}
+          <Header size="large">Grace's Posts</Header>
+          <Button.Group>
+            {this.renderCreateButton()}
+            {this.renderEditButton()}
+          </Button.Group>
         </Container>
         <Divider horizontal />
         {this.renderList()}

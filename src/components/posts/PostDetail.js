@@ -1,7 +1,8 @@
 import React from "react";
-import { Container, Card, Comment, Segment, Loader } from "semantic-ui-react";
+import { Container, Card, Loader } from "semantic-ui-react";
 import firebase from "../../firestore";
 import Serializer from "slate-base64-serializer";
+import { parseTitle } from "../../utils/PostUtils";
 import RichText from "./editor/RichText";
 
 class PostDetail extends React.Component {
@@ -10,13 +11,12 @@ class PostDetail extends React.Component {
   };
 
   componentDidMount() {
-    console.log(this.props);
-    const { id } = this.props.match.params;
+    const { title } = this.props.match.params;
 
     // Get the database
     const db = firebase.firestore();
     const postsRef = db.collection("posts");
-    const docRef = postsRef.doc(id);
+    const docRef = postsRef.doc(parseTitle(title));
 
     // Grab the appropriate document
     docRef.get().then(doc => {
