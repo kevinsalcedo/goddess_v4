@@ -7,8 +7,11 @@ import Home from "./Home";
 import PostList from "./posts/PostList";
 import PostCreate from "./posts/PostCreate";
 import PostDetail from "./posts/PostDetail";
-import PostEdit from "./posts/PostEdit";
 import headerImg from "../assets/header.jpg";
+import Footer from "./Footer";
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 class App extends React.Component {
   render() {
@@ -20,14 +23,26 @@ class App extends React.Component {
           <Divider section hidden />
           <Container>
             <Switch>
-              <Route path='/' exact component={Home} />
-              <Route path='/posts' exact component={PostList} />
-              <Route path='/posts/new' exact component={PostCreate} />
-              <Route path='/posts/:id' exact component={PostDetail} />
-              <Route path='/posts/edit/:id' exact component={PostEdit} />
+              <Route path="/" exact component={Home} />
+              <Route path="/posts" exact component={PostList} />
+              <Route path="/posts/:title" exact component={PostDetail} />
+              <Route path="/posts/edit/:title" exact component={PostCreate} />
             </Switch>
           </Container>
+          <Divider section />
+          <Footer />
+          <Divider section hidden />
         </Router>
+        <ToastContainer
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnVisibilityChange
+          draggable
+          pauseOnHover
+        />
       </Container>
     );
   }
