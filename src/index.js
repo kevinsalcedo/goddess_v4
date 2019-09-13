@@ -7,13 +7,17 @@ import { createStore, compose, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import reducers from "./reducers";
 
+import Firebase, { FirebaseContext } from "./components/firebase";
+
 let composeEnhancers = compose;
 
 const store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)));
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <FirebaseContext.Provider value={new Firebase()}>
+      <App />
+    </FirebaseContext.Provider>
   </Provider>,
   document.querySelector("#root")
 );

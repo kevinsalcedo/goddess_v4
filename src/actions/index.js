@@ -1,10 +1,13 @@
 import { SIGN_IN, SIGN_OUT, FETCH_POSTS } from "./types";
 import axiosHook from "../api/axiosHook";
 
-export const signIn = userId => {
+export const signIn = (email, uid) => {
   return {
     type: SIGN_IN,
-    payload: userId
+    payload: {
+      email,
+      uid
+    }
   };
 };
 
