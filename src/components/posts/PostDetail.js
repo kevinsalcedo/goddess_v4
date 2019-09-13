@@ -1,9 +1,9 @@
 import React from "react";
 import { Container, Card, Loader } from "semantic-ui-react";
-import firebase from "../../firestore";
 import Serializer from "slate-base64-serializer";
 import { parseTitle } from "../../utils/PostUtils";
 import RichText from "./editor/RichText";
+import { withFirebase } from "../firebase";
 
 class PostDetail extends React.Component {
   state = {
@@ -14,7 +14,7 @@ class PostDetail extends React.Component {
     const { title } = this.props.match.params;
 
     // Get the database
-    const db = firebase.firestore();
+    const db = this.props.firebase.db;
     const postsRef = db.collection("posts");
     const docRef = postsRef.doc(parseTitle(title));
 
@@ -65,4 +65,4 @@ class PostDetail extends React.Component {
   }
 }
 
-export default PostDetail;
+export default withFirebase(PostDetail);

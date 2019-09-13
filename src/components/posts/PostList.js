@@ -10,9 +10,8 @@ import {
 } from "semantic-ui-react";
 import Serializer from "slate-base64-serializer";
 import PlainSerializer from "slate-plain-serializer";
-import firebase from "../../firestore";
 import { connect } from "react-redux";
-import { fetchPosts } from "../../actions";
+import { withFirebase } from "../firebase";
 
 class PostList extends React.Component {
   state = {
@@ -27,7 +26,7 @@ class PostList extends React.Component {
 
   // Hit Firestore db to get posts
   async getContent() {
-    const db = firebase.firestore();
+    const db = this.props.firebase.db;
     const collection = db.collection("posts");
     let posts = [];
 
@@ -66,7 +65,6 @@ class PostList extends React.Component {
             <Card.Header>{post.title}</Card.Header>
           </Card.Content>
           <Card.Content description={post.snippet} />
-          {/* <Card.Content extra>{this.renderEditButton(post.title)}</Card.Content> */}
         </Card>
       ));
     }
@@ -77,17 +75,26 @@ class PostList extends React.Component {
   renderCreateButton() {
     // TODO: check for authenticated token for Grace's login
     if (this.props.auth.isSignedIn) {
+      const { isEditMode } = this.state;
       return (
-        // <Button as={Link} to="/posts/edit/new">
-        <Button onClick={() => this.props.history.push("/posts/edit/new")}>
-          Create a Post
-        </Button>
+        <>
+          <Button onClick={() => this.props.history.push("/posts/edit/new")}>
+            Create a Post
+          </Button>
+          <Button
+            toggle
+            active={isEditMode}
+            onClick={() => this.setState({ isEditMode: !isEditMode })}
+          >
+            {isEditMode ? "Stop Editing" : "Edit"}
+          </Button>
+        </>
       );
     }
   }
 
   renderEditButton = () => {
-    if (this.props.auth.isSignedIn) {
+    if (this.props.firebase.auth.currentUser != null) {
       const { isEditMode } = this.state;
       return (
         <Button
@@ -101,21 +108,6 @@ class PostList extends React.Component {
     }
   };
 
-  // renderEditButton(title) {
-  //   if (this.props.auth.isSignedIn) {
-  //     return (
-  //       <Button
-  //         size="small"
-  //         floated="right"
-  //         as={Link}
-  //         to={`/posts/edit/${title}`}
-  //       >
-  //         Edit
-  //       </Button>
-  //     );
-  //   }
-  // }
-
   render() {
     return (
       <Container>
@@ -127,10 +119,7 @@ class PostList extends React.Component {
           }}
         >
           <Header size="large">Grace's Posts</Header>
-          <Button.Group>
-            {this.renderCreateButton()}
-            {this.renderEditButton()}
-          </Button.Group>
+          <Button.Group>{this.renderCreateButton()}</Button.Group>
         </Container>
         <Divider horizontal />
         {this.renderList()}
@@ -146,7 +135,6 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  { fetchPosts }
-)(PostList);
+const list = withFirebase(PostList);
+
+export default connect(mapStateToProps)(list);

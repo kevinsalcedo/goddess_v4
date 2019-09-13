@@ -12,8 +12,9 @@ import Serializer from "slate-base64-serializer";
 import { Value } from "slate";
 import RichText from "./editor/RichText";
 import { toast } from "react-toastify";
-import { parseTitle, getPostById, validatePost } from "../../utils/PostUtils";
-import firebase from "../../firestore";
+import { parseTitle, validatePost } from "../../utils/PostUtils";
+import withAuth from "../withAuth";
+import { withFirebase } from "../firebase";
 
 const existingValue = JSON.parse(localStorage.getItem("content"));
 const initialValue = Value.fromJSON(
@@ -53,7 +54,11 @@ class PostCreate extends React.Component {
     const { title } = this.props.match.params;
     // If not a new post, then get the post and set the edit flag
     if (title !== "new") {
-      getPostById(title).then(doc => {
+      const db = this.props.firebase.db;
+      const postsRef = db.collection("posts");
+      const docRef = postsRef.doc(parseTitle(title));
+
+      docRef.get().then(doc => {
         const content = Serializer.deserialize(doc.data().content);
 
         this.setState({
@@ -99,7 +104,7 @@ class PostCreate extends React.Component {
       return;
     }
 
-    const db = firebase.firestore();
+    const db = this.props.firebase.db;
     db.settings({
       timestampsInSnapshots: true
     });
@@ -125,7 +130,7 @@ class PostCreate extends React.Component {
 
   deletePost = () => {
     const { title } = this.state;
-    const db = firebase.firestore();
+    const db = this.props.firebase.db;
     db.settings({ timestampsInSnapshots: true });
     db.collection("posts")
       .doc(title)
@@ -205,4 +210,5 @@ class PostCreate extends React.Component {
   }
 }
 
-export default PostCreate;
+const FirebaseCreate = withFirebase(PostCreate);
+export default withAuth(FirebaseCreate);
