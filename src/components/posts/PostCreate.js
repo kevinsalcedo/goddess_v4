@@ -133,7 +133,7 @@ class PostCreate extends React.Component {
     const db = this.props.firebase.db;
     db.settings({ timestampsInSnapshots: true });
     db.collection("posts")
-      .doc(title)
+      .doc(parseTitle(title))
       .delete()
       .then(() => {
         toast("Post successfuly deleted");
