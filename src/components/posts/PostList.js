@@ -53,15 +53,14 @@ class PostList extends React.Component {
   renderList() {
     if (this.state.posts) {
       const { isEditMode } = this.state;
+      const validEditMode = isEditMode && this.props.auth.isSignedIn;
       return this.state.posts.map(post => (
         <Card
           fluid
           key={post.title}
           as={Link}
-          color={isEditMode && this.props.auth.isSignedIn ? "yellow" : "violet"}
-          to={`posts/${
-            isEditMode && this.props.auth.isSignedIn ? "edit/" : ""
-          }${post.title}`}
+          color={validEditMode ? "yellow" : "violet"}
+          to={`posts/${validEditMode ? "edit/" : ""}${post.title}`}
         >
           <Card.Content>
             <Card.Header>{post.title}</Card.Header>
@@ -74,10 +73,11 @@ class PostList extends React.Component {
   }
 
   // If Grace is signed in, then show link to create
-  renderCreateButton() {
+  renderPostButtons() {
     // TODO: check for authenticated token for Grace's login
     if (this.props.auth.isSignedIn) {
       const { isEditMode } = this.state;
+      const validEditMode = isEditMode && this.props.auth.isSignedIn;
       return (
         <>
           <Button onClick={() => this.props.history.push("/posts/edit/new")}>
@@ -85,7 +85,7 @@ class PostList extends React.Component {
           </Button>
           <Button
             toggle
-            active={isEditMode}
+            active={validEditMode}
             onClick={() => this.setState({ isEditMode: !isEditMode })}
           >
             {isEditMode ? "Stop Editing" : "Edit"}
@@ -94,21 +94,6 @@ class PostList extends React.Component {
       );
     }
   }
-
-  renderEditButton = () => {
-    if (this.props.auth.isSignedIn) {
-      const { isEditMode } = this.state;
-      return (
-        <Button
-          toggle
-          active={isEditMode}
-          onClick={() => this.setState({ isEditMode: !isEditMode })}
-        >
-          {isEditMode ? "Stop Editing" : "Edit"}
-        </Button>
-      );
-    }
-  };
 
   render() {
     return (
@@ -121,7 +106,7 @@ class PostList extends React.Component {
           }}
         >
           <Header size="large">Grace's Posts</Header>
-          <Button.Group>{this.renderCreateButton()}</Button.Group>
+          <Button.Group>{this.renderPostButtons()}</Button.Group>
         </Container>
         <Divider horizontal />
         {this.renderList()}
