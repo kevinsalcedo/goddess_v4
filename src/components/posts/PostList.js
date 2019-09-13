@@ -58,8 +58,10 @@ class PostList extends React.Component {
           fluid
           key={post.title}
           as={Link}
-          color={isEditMode ? "yellow" : "violet"}
-          to={`posts/${isEditMode ? "edit/" : ""}${post.title}`}
+          color={isEditMode && this.props.auth.isSignedIn ? "yellow" : "violet"}
+          to={`posts/${
+            isEditMode && this.props.auth.isSignedIn ? "edit/" : ""
+          }${post.title}`}
         >
           <Card.Content>
             <Card.Header>{post.title}</Card.Header>
@@ -94,7 +96,7 @@ class PostList extends React.Component {
   }
 
   renderEditButton = () => {
-    if (this.props.firebase.auth.currentUser != null) {
+    if (this.props.auth.isSignedIn) {
       const { isEditMode } = this.state;
       return (
         <Button
