@@ -117,7 +117,6 @@ class PostList extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    posts: Object.values(state.posts)[0],
     auth: state.auth
   };
 };
