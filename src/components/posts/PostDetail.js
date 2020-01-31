@@ -1,9 +1,11 @@
 import React from "react";
-import { Container, Card, Loader } from "semantic-ui-react";
+import { Container, Card, Loader, Button } from "semantic-ui-react";
+import { Link } from "react-router-dom";
 import Serializer from "slate-base64-serializer";
 import { parseTitle } from "../../utils/PostUtils";
 import RichText from "./editor/RichText";
 import { withFirebase } from "../firebase";
+import { connect } from "react-redux";
 
 class PostDetail extends React.Component {
   state = {
@@ -31,21 +33,25 @@ class PostDetail extends React.Component {
     });
   }
 
-  // const renderComments = () => {
-  //   return comments.map(comment => (
-  //     <Comment key={comment.id}>
-  //       <Comment.Author>{comment.name}</Comment.Author>
-  //       <Comment.Text>{comment.body}</Comment.Text>
-  //     </Comment>
-  //   ));
-  // };
   render() {
     return (
       <Container>
         {this.state.post ? (
           <Card fluid>
-            <Card.Content header={this.state.post.title} />
-            {/* <Card.Content description={this.state.post.content} /> */}
+            <Card.Content>
+              <Card.Header>
+                {this.state.post.title}{" "}
+                {this.props.auth.isSignedIn ? (
+                  <Button
+                    floated="right"
+                    as={Link}
+                    to={`/posts/edit/${this.state.post.title}`}
+                  >
+                    Edit
+                  </Button>
+                ) : null}
+              </Card.Header>
+            </Card.Content>
             <Card.Content>
               <RichText value={this.state.post.content} readOnly={true} />
             </Card.Content>
@@ -53,16 +59,15 @@ class PostDetail extends React.Component {
         ) : (
           <Loader />
         )}
-        {/* <Segment>
-        {comments ? (
-          <Comment.Group>{renderComments()}</Comment.Group>
-        ) : (
-          <Loader />
-        )}
-      </Segment> */}
       </Container>
     );
   }
 }
 
-export default withFirebase(PostDetail);
+const mapStateToProps = state => {
+  return { auth: state.auth };
+};
+
+const FirebaseDetail = withFirebase(PostDetail);
+
+export default connect(mapStateToProps)(FirebaseDetail);

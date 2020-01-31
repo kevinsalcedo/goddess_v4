@@ -39,14 +39,7 @@ class RichText extends React.Component {
     return (
       <Container>
         {this.renderMenu()}
-        <Container
-          style={{
-            backgroundColor: "#eee",
-            borderRadius: 3,
-            minHeight: 200,
-            padding: 20
-          }}
-        >
+        <Container className="text-editor">
           <Editor
             spellCheck
             autoFocusplaceholder="Enter text here..."
@@ -57,6 +50,7 @@ class RichText extends React.Component {
             renderBlock={this.renderBlock}
             renderMark={this.renderMark}
             readOnly={this.props.readOnly}
+            className="blog-text"
           />
         </Container>
       </Container>
